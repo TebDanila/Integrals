@@ -1,0 +1,204 @@
+#include "pch.h"
+#include <iostream>
+#include <cmath>
+#include <iomanip>
+
+using namespace std;
+
+void abc(float *a, float *b, float *c) {
+	cout << "введие a, не равное 0 " << endl << "a = ";
+	cin >> *a;
+	cout << "введие b " << endl << "b = ";
+	cin >> *b;
+	cout << "введие c " << endl << "c = ";
+	cin >> *c;
+}
+float disss(float a1, float b1, float c1) {
+	float d1;
+	d1 = b1 * b1 - 4 * a1*c1;
+	return d1;
+}
+void korniii(float a2, float  b2, float d1, float *x1, float *x2) {
+	*x1 = (-b2 - d1) / (2 * a2);
+	*x2 = (-b2 + d1) / (2 * a2);
+}
+
+float integralll(float min1, float max1, float a6, float b6, float c6) {
+	float ST1;
+	ST1 = a6 * (max1 * max1 * max1 / 3 - min1 * min1*min1 / 3) + b6 * (max1*max1 / 2 - min1 * min1 / 2) + c6 * (max1 - min1);
+	ST1 = abs(ST1);
+	return ST1;
+}
+
+
+
+float griddd(float max2, float min2, float n7, float ST1, float a7, float b7, float c7) {
+	float h, x, y, sp;
+	sp = 0;
+	x = min2;
+	h = abs(max2 - min2) / n7;
+	for (int i = 1; i <= (n7 - 1); i++) {
+		x = x + h;
+		y = a7 * x*x + b7 * x + c7;
+		sp = sp + (y * h);
+	}
+	return abs(sp);
+}
+
+float expor(float ST3, float SP3) {
+	float exppp;
+	exppp = abs(ST3 - SP3);
+	return exppp;
+}
+
+
+
+int main() {
+	const unsigned int R = 50;
+	const unsigned int T = 51;
+	setlocale(LC_ALL, "Russian");
+	float a, b, c, d, x1, x2, min, max, ST, SP, xv, yv, ras, sx, y1;
+	int s, n, w, i, y;
+	abc(&a, &b, &c);
+	while (a == 0) {
+		system("CLS");
+		abc(&a, &b, &c);
+	}
+	d = disss(a, b, c);
+	while (d < 1) {
+		if (d == 0) {
+			cout << "У уравнения 1 корень" << endl << "Хотите выполнить программу ещё раз? Ответьте Да - 1 или Нет - 2" << endl;
+			cin >> s;
+			if (s == 1) {
+				system("CLS");
+				abc(&a, &b, &c);
+				while (a == 0) {
+					system("CLS");
+					abc(&a, &b, &c);
+				}
+				d = disss(a, b, c);
+
+			}
+			if (s == 2) {
+				system("CLS");
+				cout << "Конец";
+				return 1;
+			}
+		}
+		if (d < 0) {
+			cout << "У уравнения не имеет корней" << endl << "Хотите выполнить программу ещё раз? Ответьте Да - 1 или Нет - 2" << endl;
+			cin >> s;
+			if (s == 1) {
+				system("CLS");
+				abc(&a, &b, &c);
+				while (a == 0) {
+					system("CLS");
+					abc(&a, &b, &c);
+				}
+				d = disss(a, b, c);
+			}
+			if (s == 2) {
+				system("CLS");
+				cout << "Конец";
+				return 1;
+			}
+		}
+	}
+
+	d = abs(d);
+	cout << endl << "Дискриминант = " << d << endl;
+	d = sqrt(d);
+	korniii(a, b, d, &x1, &x2);
+	cout << "икс 1 = " << x1 << endl << "икс 2 = " << x2;
+	min = x1;
+	max = x2;
+	if (max < min) {
+		min = x2;
+		max = x1;
+	}
+	ST = integralll(min, max, a, b, c);
+	cout << endl << "Площадь методом интеграла = " << ST;
+	n = 2;
+
+	SP = griddd(max, min, n, ST, a, b, c);
+
+	while ((abs((ST - SP) * 100 / ST) > 1)) {
+		n++;
+		SP = griddd(max, min, n, ST, a, b, c);
+	}
+	cout << endl << "Площадь мотодом сетки = " << SP;
+	cout << endl << "Всего использовалось " << n << " рядов";
+	cout << endl << "Погрешность равна = " << expor(ST, SP) << "  1 процент от правильных расчетов = " << 0.01*ST;
+
+	xv = -b / (2 * a);
+	yv = a * xv*xv + b * xv + c;
+
+	cout << endl << endl;
+
+
+
+
+	char eee[R][T];
+	
+	ras = abs(max - min) / (T - 1);
+	sx = min;
+	if (yv < 0) {
+		for (int i = 0; i < R; i++) {
+			for (int j = 0; j < T; j++) {
+				eee[i][j] = '.';
+			}
+		}
+		for (int j = 0; j < T; j++) {
+			for (i = 0; i < R; i++)
+				y1 = (a * sx*sx + b * sx + c);
+			if (y1 < 1) { y1 = y1 * 100; }
+			y = y1;
+			y = abs(y);
+			
+			for (i = 0; i < y; i++) {
+				eee[i][j] = 'x';
+			}
+
+			eee[y][j] = '0';
+
+
+
+			sx = sx + ras;
+		}
+	}
+	
+	if (yv > 0) {
+		for (int i = 0; i < R; i++) {
+			for (int j = 0; j < T; j++) {
+				eee[i][j] = 'x';
+			}
+		}
+		for (int j = 0; j < T; j++) {
+			for (i = R; i > 0; i--)
+				y1 = (a * sx*sx + b * sx + c);
+			    if (y1 < 1) { y1 = y1 * 100; }
+				y = y1;
+			    y = abs(y);
+
+				for (i = 0; i < (R-y); i++) {
+					eee[i][j] = '.';
+				}
+
+				eee[(R-1)-y][j] = '0';
+				sx = sx + ras;
+		}
+	}
+	cout << endl;
+
+	for (i = 0; i < R; i++)
+	{
+		for (int j = 0; j < T; j++)
+			cout << setw(2) << eee[i][j];
+		cout << endl;
+
+
+	}
+
+
+	return 0;
+}
